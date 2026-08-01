@@ -1,0 +1,28 @@
+[package]
+name = "lancev"
+version = "0.1.0-alpha.4"
+edition = "2024"
+repository = "https://github.com/mocobeta/lance-viewer"
+
+[package.metadata.wix]
+upgrade-guid = "512CDB26-456C-4147-829D-6D9A46A0E492"
+path-guid = "A11623A2-A5AF-4AE9-BDDB-249FE7D2FDF5"
+license = false
+eula = false
+
+[dependencies]
+crossterm = "0.29.0"
+lance = "10.0.0"
+lance-file = "10.0.0"
+lance-io = "10.0.0"
+object_store = "0.13.2"
+opaline = "0.4.1"
+prost = "0.14.4"
+prost-types = "0.14.4"
+ratatui = "0.30.2"
+tokio = { version = "1.23", features = ["rt-multi-thread"] }
+
+# The profile that 'dist' will build with
+[profile.dist]
+inherits = "release"
+lto = "thin"
