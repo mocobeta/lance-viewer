@@ -7,8 +7,8 @@ the Lance Lakehouse Format. Application code currently lives in
 `src/main.rs`; as the project grows, keep additional Rust modules under
 `src/` and place integration tests under `tests/`. `Cargo.toml` defines the
 package and dependencies, `Cargo.lock` records resolved versions, and
-`rust-toolchain.toml` pins Rust `1.97.0` with `rustfmt`, Clippy, and
-Rust Analyzer. There are no separate asset or fixture directories yet.
+`rust-toolchain.toml` includes `rustfmt`, Clippy, and Rust Analyzer. There are
+no separate asset or fixture directories yet.
 
 ## Build, Test, and Development Commands
 
