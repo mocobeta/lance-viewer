@@ -12,6 +12,7 @@ use super::{tab_content_block, tab_title_style};
 pub(crate) const TITLE: &str = "Storage Layout";
 pub(crate) const CONTENT: &str = "No storage layout loaded.";
 
+/// Internal helper for render.
 pub(crate) fn render(
     frame: &mut Frame,
     area: Rect,

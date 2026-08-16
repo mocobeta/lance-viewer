@@ -37,10 +37,17 @@ pub(crate) enum DatasetState {
     Unavailable { uri: String, reason: String },
 }
 
+/// Mutable state for a viewer session.
+///
+/// The public fields represent the application-level settings callers may
+/// initialize or inspect; tab-specific state remains internal to the TUI.
 #[derive(Debug)]
 pub struct AppState {
+    /// Whether the light theme is active.
     pub light_mode: bool,
+    /// The zero-based index of the selected top-level tab.
     pub selected_tab: usize,
+    /// The dataset URI currently associated with the session, when set.
     pub uri: Option<String>,
     pub(crate) dataset_state: DatasetState,
     pub(crate) tables_selected: Option<u64>,
@@ -103,6 +110,7 @@ impl Default for AppState {
 }
 
 impl AppState {
+    /// Creates a session state for an optional dataset URI.
     pub fn new(uri: Option<String>) -> Self {
         Self {
             uri,
@@ -110,6 +118,7 @@ impl AppState {
         }
     }
 
+    /// Internal helper for with dataset state.
     pub(crate) fn with_dataset_state(uri: Option<String>, dataset_state: DatasetState) -> Self {
         let storage_expanded = match &dataset_state {
             DatasetState::Loaded(dataset_info) => dataset_info.storage_layout.default_expanded(),
@@ -123,27 +132,36 @@ impl AppState {
         }
     }
 
+    /// Switches between the light and dark themes.
     pub fn toggle_theme(&mut self) {
         self.light_mode = !self.light_mode;
     }
 
+    /// Selects the preceding tab without moving before the first tab.
+    ///
+    /// `tab_count` is the number of available tabs.
     pub fn previous_tab(&mut self, tab_count: usize) {
         if tab_count > 0 {
             self.selected_tab = self.selected_tab.min(tab_count - 1).saturating_sub(1);
         }
     }
 
+    /// Selects the next tab without moving past the last tab.
+    ///
+    /// `tab_count` is the number of available tabs.
     pub fn next_tab(&mut self, tab_count: usize) {
         if tab_count > 0 {
             self.selected_tab = self.selected_tab.saturating_add(1).min(tab_count - 1);
         }
     }
 
+    /// Internal helper for set help max scroll.
     pub(crate) fn set_help_max_scroll(&mut self, max_scroll: usize) {
         self.help_max_scroll = max_scroll;
         self.help_scroll = self.help_scroll.min(max_scroll);
     }
 
+    /// Internal helper for scroll help.
     pub(crate) fn scroll_help(&mut self, direction: i8) {
         self.help_scroll = if direction < 0 {
             self.help_scroll.saturating_sub(1)
@@ -152,6 +170,7 @@ impl AppState {
         };
     }
 
+    /// Internal helper for move tables selection.
     pub(crate) fn move_tables_selection(&mut self, direction: i8) -> Option<u64> {
         let versions = match &self.dataset_state {
             DatasetState::Loaded(dataset_info) => dataset_info
@@ -183,6 +202,7 @@ impl AppState {
         self.tables_selected
     }
 
+    /// Internal helper for move indices version selection.
     pub(crate) fn move_indices_version_selection(&mut self, direction: i8) -> Option<u64> {
         let versions = match &self.dataset_state {
             DatasetState::Loaded(dataset_info) => dataset_info
@@ -219,6 +239,7 @@ impl AppState {
         self.indices_selected_version
     }
 
+    /// Internal helper for focus indices versions.
     pub(crate) fn focus_indices_versions(&mut self) {
         self.indices_focus = Some(IndicesFocus::Versions);
         self.index_selected = None;
@@ -226,6 +247,7 @@ impl AppState {
         self.index_layout_outline_selected = None;
     }
 
+    /// Internal helper for reset indices widgets.
     pub(crate) fn reset_indices_widgets(&mut self) {
         self.indices_focus = None;
         self.indices_selected_version = None;
@@ -236,6 +258,7 @@ impl AppState {
         self.index_layout_outline_selected = None;
     }
 
+    /// Internal helper for focus indices.
     pub(crate) fn focus_indices(&mut self) {
         self.indices_focus = Some(IndicesFocus::Indices);
         self.index_selected = None;
@@ -260,6 +283,7 @@ impl AppState {
         }
     }
 
+    /// Internal helper for focus selected table index.
     pub(crate) fn focus_selected_table_index(&mut self) {
         let Some(version) = self.tables_selected else {
             return;
@@ -272,17 +296,20 @@ impl AppState {
         }
     }
 
+    /// Internal helper for focus index details.
     pub(crate) fn focus_index_details(&mut self) {
         self.indices_focus = Some(IndicesFocus::Details);
         self.select_indices_detail(self.indices_detail_selected);
     }
 
+    /// Internal helper for return to indices.
     pub(crate) fn return_to_indices(&mut self) {
         self.indices_focus = Some(IndicesFocus::Indices);
         self.index_file_selected = None;
         self.index_layout_outline_selected = None;
     }
 
+    /// Internal helper for select indices detail.
     pub(crate) fn select_indices_detail(&mut self, selected: usize) {
         self.indices_detail_selected = selected.min(INDICES_DETAIL_TAB_COUNT - 1);
         self.index_file_selected = if self.indices_detail_selected == 0 {
@@ -297,6 +324,7 @@ impl AppState {
         self.index_layout_outline_selected = None;
     }
 
+    /// Internal helper for move indices detail.
     pub(crate) fn move_indices_detail(&mut self, direction: i8) -> bool {
         let current = self.indices_detail_selected;
         let next = if direction < 0 {
@@ -311,6 +339,7 @@ impl AppState {
         true
     }
 
+    /// Internal helper for move index selection.
     pub(crate) fn move_index_selection(&mut self, direction: i8) {
         let file_count = self.selected_indices_count();
         if file_count == 0 {
@@ -350,6 +379,7 @@ impl AppState {
         }
     }
 
+    /// Internal helper for move index file selection.
     pub(crate) fn move_index_file_selection(&mut self, direction: i8) {
         let file_count = self.selected_index_file_count();
         if file_count == 0 {
@@ -371,6 +401,7 @@ impl AppState {
         self.index_layout_outline_selected = None;
     }
 
+    /// Internal helper for focus index layout outline.
     pub(crate) fn focus_index_layout_outline(&mut self) {
         self.indices_focus = Some(IndicesFocus::LayoutOutline);
         if self.index_layout_outline_selected.is_none() {
@@ -378,6 +409,7 @@ impl AppState {
         }
     }
 
+    /// Internal helper for move index layout outline selection.
     pub(crate) fn move_index_layout_outline_selection(&mut self, direction: i8) {
         let Some((cache_key, layout)) = self.selected_index_file_layout_context() else {
             return;
@@ -405,6 +437,7 @@ impl AppState {
         self.index_layout_outline_selected = Some(visible[next]);
     }
 
+    /// Internal helper for toggle index layout outline.
     pub(crate) fn toggle_index_layout_outline(&mut self) {
         let Some((cache_key, layout)) = self.selected_index_file_layout_context() else {
             return;
@@ -430,6 +463,7 @@ impl AppState {
         }
     }
 
+    /// Internal helper for reset index layout outline selection.
     pub(crate) fn reset_index_layout_outline_selection(&mut self) {
         self.index_layout_outline_selected = None;
     }
@@ -477,6 +511,7 @@ impl AppState {
         Some((key, layout))
     }
 
+    /// Internal helper for focus details.
     pub(crate) fn focus_details(&mut self) {
         if self.tables_selected.is_some() {
             self.tables_focus = TablesFocus::Details;
@@ -484,6 +519,7 @@ impl AppState {
         }
     }
 
+    /// Internal helper for focus versions.
     pub(crate) fn focus_versions(&mut self) {
         self.tables_focus = TablesFocus::Versions;
         self.schema_selected = None;
@@ -492,12 +528,14 @@ impl AppState {
         self.layout_outline_selected = None;
     }
 
+    /// Internal helper for reset tables widgets.
     pub(crate) fn reset_tables_widgets(&mut self) {
         self.tables_selected = None;
         self.focus_versions();
         self.tables_detail_selected = 0;
     }
 
+    /// Internal helper for select tables detail.
     pub(crate) fn select_tables_detail(&mut self, selected: usize) {
         self.tables_detail_selected = selected.min(TABLES_DETAIL_TAB_COUNT - 1);
         self.data_file_selected = None;
@@ -523,6 +561,7 @@ impl AppState {
         };
     }
 
+    /// Internal helper for move tables detail.
     pub(crate) fn move_tables_detail(&mut self, direction: i8) -> bool {
         let current = self.tables_detail_selected;
         let next = if direction < 0 {
@@ -537,6 +576,7 @@ impl AppState {
         true
     }
 
+    /// Internal helper for move schema selection.
     pub(crate) fn move_schema_selection(&mut self, direction: i8) {
         let field_count = match (&self.dataset_state, self.tables_selected) {
             (DatasetState::Loaded(dataset_info), Some(version)) => dataset_info
@@ -563,6 +603,7 @@ impl AppState {
         self.schema_selected = Some(next);
     }
 
+    /// Internal helper for move fragment selection.
     pub(crate) fn move_fragment_selection(&mut self, direction: i8) {
         let fragment_count = match (&self.dataset_state, self.tables_selected) {
             (DatasetState::Loaded(dataset_info), Some(version)) => dataset_info
@@ -591,6 +632,7 @@ impl AppState {
         self.fragment_selected = Some(next);
     }
 
+    /// Internal helper for ensure tables index selection.
     pub(crate) fn ensure_tables_index_selection(&mut self) {
         if self.tables_detail_selected == 3 && self.tables_focus == TablesFocus::Details {
             self.tables_index_selected = self
@@ -600,6 +642,7 @@ impl AppState {
         }
     }
 
+    /// Internal helper for move tables index selection.
     pub(crate) fn move_tables_index_selection(&mut self, direction: i8) {
         let index_count = self.tables_index_count();
         if index_count == 0 {
@@ -630,6 +673,7 @@ impl AppState {
         }
     }
 
+    /// Internal helper for move data file selection.
     pub(crate) fn move_data_file_selection(&mut self, direction: i8) {
         let data_file_count = match (&self.dataset_state, self.tables_selected) {
             (DatasetState::Loaded(dataset_info), selected_version) => {
@@ -662,6 +706,7 @@ impl AppState {
         self.layout_outline_selected = None;
     }
 
+    /// Internal helper for focus layout outline.
     pub(crate) fn focus_layout_outline(&mut self) {
         self.data_files_focus = Some(DataFilesFocus::LayoutOutline);
         if self.layout_outline_selected.is_none() {
@@ -669,6 +714,7 @@ impl AppState {
         }
     }
 
+    /// Internal helper for focus data files.
     pub(crate) fn focus_data_files(&mut self) {
         self.data_files_focus = Some(DataFilesFocus::DataFiles);
         if self.data_file_selected.is_none() {
@@ -676,18 +722,21 @@ impl AppState {
         }
     }
 
+    /// Internal helper for return to fragments.
     pub(crate) fn return_to_fragments(&mut self) {
         self.data_files_focus = Some(DataFilesFocus::Fragments);
         self.data_file_selected = None;
         self.layout_outline_selected = None;
     }
 
+    /// Internal helper for focus data files fragments.
     pub(crate) fn focus_data_files_fragments(&mut self) {
         self.data_files_focus = Some(DataFilesFocus::Fragments);
         self.data_file_selected = Some(0);
         self.layout_outline_selected = None;
     }
 
+    /// Internal helper for reset data files widgets.
     pub(crate) fn reset_data_files_widgets(&mut self) {
         self.reset_tables_widgets();
         self.data_files_focus = None;
@@ -696,6 +745,7 @@ impl AppState {
         self.layout_outline_selected = None;
     }
 
+    /// Internal helper for move layout outline selection.
     pub(crate) fn move_layout_outline_selection(&mut self, direction: i8) {
         let Some((cache_key, layout)) = self.selected_layout_context() else {
             return;
@@ -723,6 +773,7 @@ impl AppState {
         self.layout_outline_selected = Some(visible[next]);
     }
 
+    /// Internal helper for toggle layout outline.
     pub(crate) fn toggle_layout_outline(&mut self) {
         let Some((cache_key, layout)) = self.selected_layout_context() else {
             return;
@@ -748,6 +799,7 @@ impl AppState {
         }
     }
 
+    /// Internal helper for reset layout outline selection.
     pub(crate) fn reset_layout_outline_selection(&mut self) {
         self.layout_outline_selected = None;
     }
@@ -777,6 +829,7 @@ impl AppState {
         Some((key, layout))
     }
 
+    /// Internal helper for move storage selection.
     pub(crate) fn move_storage_selection(&mut self, direction: i8) {
         let keys = match &self.dataset_state {
             DatasetState::Loaded(dataset_info) => dataset_info
@@ -799,6 +852,7 @@ impl AppState {
         self.storage_selected = keys[next].clone();
     }
 
+    /// Internal helper for storage selection is at start.
     pub(crate) fn storage_selection_is_at_start(&self) -> bool {
         let keys = match &self.dataset_state {
             DatasetState::Loaded(dataset_info) => dataset_info
@@ -810,6 +864,7 @@ impl AppState {
             .is_none_or(|first| first == &self.storage_selected)
     }
 
+    /// Internal helper for reset storage widgets.
     pub(crate) fn reset_storage_widgets(&mut self) {
         let root_key = storage_root_key(".");
         self.storage_expanded = match &self.dataset_state {
@@ -820,6 +875,7 @@ impl AppState {
         self.storage_focus = false;
     }
 
+    /// Internal helper for toggle storage selection.
     pub(crate) fn toggle_storage_selection(&mut self) {
         let expandable = match &self.dataset_state {
             DatasetState::Loaded(dataset_info) => dataset_info

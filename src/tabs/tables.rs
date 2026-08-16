@@ -31,6 +31,7 @@ const SCHEMA_COLUMN_WIDTHS: [Constraint; 6] = [
 ];
 
 #[derive(Clone, Copy)]
+/// Internal representation of RenderState.
 pub(crate) struct RenderState {
     pub(crate) selected_version: Option<u64>,
     pub(crate) tables_focus: TablesFocus,
@@ -40,6 +41,7 @@ pub(crate) struct RenderState {
     pub(crate) selected_index: Option<usize>,
 }
 
+/// Internal helper for render.
 pub(crate) fn render(
     frame: &mut Frame,
     area: Rect,

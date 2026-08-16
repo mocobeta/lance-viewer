@@ -30,6 +30,7 @@ pub(crate) const TITLES: [&str; 6] = [
     help::TITLE,
 ];
 
+/// Internal representation of RenderState.
 pub(crate) struct RenderState<'a> {
     pub(crate) dataset_state: &'a DatasetState,
     pub(crate) tables_selected: Option<u64>,
@@ -55,30 +56,36 @@ pub(crate) struct RenderState<'a> {
     pub(crate) help_scroll: usize,
 }
 
+/// Internal helper for help max scroll.
 pub(crate) fn help_max_scroll(area: Rect, theme: &Theme) -> usize {
     help::max_scroll(area, theme)
 }
 
+/// Internal helper for pane style.
 pub(crate) fn pane_style(theme: &Theme) -> Style {
     Style::default()
         .fg(theme.color("text.primary").into())
         .bg(theme.color("bg.panel").into())
 }
 
+/// Internal helper for pane block.
 pub(crate) fn pane_block(theme: &Theme) -> Block<'static> {
     Block::bordered()
         .style(pane_style(theme))
         .border_style(theme.style("unfocused_border"))
 }
 
+/// Internal helper for tab content block.
 pub(crate) fn tab_content_block(theme: &Theme) -> Block<'static> {
     pane_block(theme).padding(Padding::proportional(1))
 }
 
+/// Internal helper for tab title style.
 pub(crate) fn tab_title_style(theme: &Theme) -> Style {
     Style::default().fg(theme.color("accent.secondary").into())
 }
 
+/// Internal helper for tab block.
 pub(crate) fn tab_block(theme: &Theme, focused: bool) -> Block<'static> {
     pane_block(theme).border_style(if focused {
         theme.style("focused_border")
@@ -87,6 +94,7 @@ pub(crate) fn tab_block(theme: &Theme, focused: bool) -> Block<'static> {
     })
 }
 
+/// Internal helper for render.
 pub(crate) fn render(
     frame: &mut Frame,
     area: Rect,

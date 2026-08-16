@@ -11,12 +11,14 @@ use super::{pane_style, tab_content_block, tab_title_style};
 
 pub(crate) const TITLE: &str = "Help";
 
+/// Internal helper for max scroll.
 pub(crate) fn max_scroll(area: Rect, theme: &Theme) -> usize {
     help_lines(theme)
         .len()
         .saturating_sub(usize::from(tab_content_block(theme).inner(area).height))
 }
 
+/// Internal helper for render.
 pub(crate) fn render(frame: &mut Frame, area: Rect, theme: &Theme, scroll: usize) {
     let max_scroll = max_scroll(area, theme);
     let scroll = scroll.min(max_scroll).min(usize::from(u16::MAX)) as u16;

@@ -10,6 +10,7 @@ use crate::tabs;
 
 use super::AppState;
 
+/// Internal helper for render.
 pub(crate) fn render(frame: &mut Frame<'_>, state: &mut AppState, theme: &opaline::Theme) {
     frame.render_widget(
         Block::default().style(

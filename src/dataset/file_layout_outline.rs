@@ -4,12 +4,14 @@ use crate::formatting::format_bytes;
 
 use super::{ByteRange, FileLayoutInfo, FileLayoutKind, LegacyFileLayout, V2FileLayout};
 
+/// Internal representation of LayoutOutlineTree.
 pub(crate) struct LayoutOutlineTree {
     pub(crate) nodes: Vec<LayoutOutlineNode>,
     roots: Vec<usize>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+/// Internal representation of LayoutOutlineNode.
 pub(crate) struct LayoutOutlineNode {
     pub(crate) key: String,
     pub(crate) label: String,
@@ -19,6 +21,7 @@ pub(crate) struct LayoutOutlineNode {
 }
 
 impl LayoutOutlineTree {
+    /// Internal helper for visible nodes.
     pub(crate) fn visible_nodes(&self) -> Vec<usize> {
         fn visit(tree: &LayoutOutlineTree, id: usize, output: &mut Vec<usize>) {
             output.push(id);
@@ -37,6 +40,7 @@ impl LayoutOutlineTree {
         output
     }
 
+    /// Internal helper for node.
     pub(crate) fn node(&self, id: usize) -> Option<&LayoutOutlineNode> {
         self.nodes.get(id)
     }
@@ -94,6 +98,7 @@ impl LayoutOutlineBuilder {
     }
 }
 
+/// Internal helper for layout outline default expanded.
 pub(crate) fn layout_outline_default_expanded() -> BTreeSet<String> {
     BTreeSet::from([
         "root".to_string(),
@@ -105,6 +110,7 @@ pub(crate) fn layout_outline_default_expanded() -> BTreeSet<String> {
     ])
 }
 
+/// Internal helper for layout outline tree.
 pub(crate) fn layout_outline_tree(
     layout: &FileLayoutInfo,
     expanded: Option<&BTreeSet<String>>,

@@ -1,6 +1,7 @@
 use std::collections::BTreeMap;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+/// Internal representation of DatasetInfo.
 pub(crate) struct DatasetInfo {
     pub(crate) uri: String,
     pub(crate) storage_format: String,
@@ -36,12 +37,14 @@ pub(crate) struct DatasetInfo {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+/// Internal representation of VersionInfo.
 pub(crate) struct VersionInfo {
     pub(crate) version: u64,
     pub(crate) timestamp: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+/// Internal representation of IndexInfo.
 pub(crate) struct IndexInfo {
     pub(crate) uuid: String,
     pub(crate) base_id: Option<u32>,
@@ -58,12 +61,14 @@ pub(crate) struct IndexInfo {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+/// Internal representation of IndexFileInfo.
 pub(crate) struct IndexFileInfo {
     pub(crate) path: String,
     pub(crate) size_bytes: u64,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+/// Internal representation of ManifestInfo.
 pub(crate) struct ManifestInfo {
     pub(crate) version: u64,
     pub(crate) path: String,
@@ -77,6 +82,7 @@ pub(crate) struct ManifestInfo {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+/// Internal representation of FragmentInfo.
 pub(crate) struct FragmentInfo {
     pub(crate) id: u64,
     pub(crate) rows: Option<u64>,
@@ -88,6 +94,7 @@ pub(crate) struct FragmentInfo {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+/// Internal representation of DataFileInfo.
 pub(crate) struct DataFileInfo {
     pub(crate) path: String,
     pub(crate) format: String,
@@ -97,6 +104,7 @@ pub(crate) struct DataFileInfo {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+/// Internal representation of FileLayoutInfo.
 pub(crate) struct FileLayoutInfo {
     pub(crate) path: String,
     pub(crate) file_size_bytes: u64,
@@ -110,6 +118,7 @@ pub(crate) enum FileLayoutKind {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+/// Internal representation of V2FileLayout.
 pub(crate) struct V2FileLayout {
     pub(crate) num_rows: u64,
     pub(crate) footer: V2Footer,
@@ -118,6 +127,7 @@ pub(crate) struct V2FileLayout {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+/// Internal representation of V2Footer.
 pub(crate) struct V2Footer {
     pub(crate) column_metadata_start: u64,
     pub(crate) cmo_start: u64,
@@ -130,6 +140,7 @@ pub(crate) struct V2Footer {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+/// Internal representation of LegacyFileLayout.
 pub(crate) struct LegacyFileLayout {
     pub(crate) metadata_offset: u64,
     pub(crate) descriptor_size: u64,
@@ -148,6 +159,7 @@ pub(crate) struct LegacyFileLayout {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+/// Internal representation of LegacyPage.
 pub(crate) struct LegacyPage {
     pub(crate) field_id: i32,
     pub(crate) batch: usize,
@@ -155,18 +167,21 @@ pub(crate) struct LegacyPage {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+/// Internal representation of ByteRange.
 pub(crate) struct ByteRange {
     pub(crate) offset: u64,
     pub(crate) size: u64,
 }
 
 impl ByteRange {
+    /// Internal helper for end.
     pub(crate) fn end(self) -> u64 {
         self.offset.saturating_add(self.size)
     }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+/// Internal representation of ColumnLayoutInfo.
 pub(crate) struct ColumnLayoutInfo {
     pub(crate) encoding: String,
     pub(crate) metadata: ByteRange,
@@ -175,6 +190,7 @@ pub(crate) struct ColumnLayoutInfo {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+/// Internal representation of PageLayoutInfo.
 pub(crate) struct PageLayoutInfo {
     pub(crate) num_rows: u64,
     pub(crate) priority: u64,
@@ -183,6 +199,7 @@ pub(crate) struct PageLayoutInfo {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+/// Internal representation of DeletionFileInfo.
 pub(crate) struct DeletionFileInfo {
     pub(crate) id: u64,
     pub(crate) read_version: u64,
@@ -190,23 +207,27 @@ pub(crate) struct DeletionFileInfo {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+/// Internal representation of VersionDetails.
 pub(crate) struct VersionDetails {
     pub(crate) manifest: ManifestInfo,
     pub(crate) fields: Vec<FieldInfo>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+/// Internal representation of StorageLayout.
 pub(crate) struct StorageLayout {
     pub(crate) roots: Vec<StorageRoot>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+/// Internal representation of StorageRoot.
 pub(crate) struct StorageRoot {
     pub(crate) name: String,
     pub(crate) entries: Vec<StorageEntry>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+/// Internal representation of StorageEntry.
 pub(crate) struct StorageEntry {
     pub(crate) path: String,
     pub(crate) directory: bool,
@@ -214,6 +235,7 @@ pub(crate) struct StorageEntry {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+/// Internal representation of StorageNode.
 pub(crate) struct StorageNode {
     pub(crate) key: String,
     pub(crate) name: String,
@@ -223,6 +245,7 @@ pub(crate) struct StorageNode {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+/// Internal representation of FieldInfo.
 pub(crate) struct FieldInfo {
     pub(crate) id: i32,
     pub(crate) path: String,

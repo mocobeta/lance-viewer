@@ -3,6 +3,7 @@ use std::collections::BTreeMap;
 use super::{StorageEntry, StorageLayout, StorageNode};
 
 impl StorageLayout {
+    /// Internal helper for default expanded.
     pub(crate) fn default_expanded(&self) -> std::collections::BTreeSet<String> {
         let mut expanded = std::collections::BTreeSet::new();
         for root in self.tree() {
@@ -17,6 +18,7 @@ impl StorageLayout {
         expanded
     }
 
+    /// Internal helper for tree.
     pub(crate) fn tree(&self) -> Vec<StorageNode> {
         self.roots
             .iter()
@@ -37,6 +39,7 @@ impl StorageLayout {
             .collect()
     }
 
+    /// Internal helper for visible keys.
     pub(crate) fn visible_keys(
         &self,
         expanded: &std::collections::BTreeSet<String>,
@@ -48,6 +51,7 @@ impl StorageLayout {
         keys
     }
 
+    /// Internal helper for is expandable.
     pub(crate) fn is_expandable(&self, key: &str) -> bool {
         self.tree()
             .into_iter()
@@ -55,6 +59,7 @@ impl StorageLayout {
     }
 }
 
+/// Internal helper for storage root key.
 pub(crate) fn storage_root_key(name: &str) -> String {
     format!("root:{name}")
 }

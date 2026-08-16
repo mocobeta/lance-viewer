@@ -22,6 +22,10 @@ fn load_theme(light_mode: bool) -> opaline::Theme {
         .expect("bundled One Light and One Dark themes must be available")
 }
 
+/// Runs the interactive Lance dataset viewer in the supplied terminal.
+///
+/// `uri` selects the dataset to open, defaulting to the current directory when
+/// absent. `startup_theme` optionally overrides the default dark theme.
 pub fn run(
     terminal: &mut DefaultTerminal,
     uri: Option<String>,

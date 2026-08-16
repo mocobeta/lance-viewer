@@ -1,27 +1,40 @@
 use std::{error::Error, io, io::ErrorKind};
 
+/// The color theme selected when the viewer starts.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum StartupTheme {
+    /// Use the bundled light theme.
     Light,
+    /// Use the bundled dark theme.
     Dark,
 }
 
 impl StartupTheme {
+    /// Returns whether this theme uses light-mode colors.
     pub const fn light_mode(self) -> bool {
         matches!(self, Self::Light)
     }
 }
 
+/// Command-line arguments accepted by the viewer.
 #[derive(Debug, Default, PartialEq, Eq)]
 pub struct Cli {
+    /// Dataset URI passed with `--uri`, if any.
     pub uri: Option<String>,
+    /// Theme selected with `--theme` or `-t`, if any.
     pub theme: Option<StartupTheme>,
+    /// Whether help output was requested with `--help` or `-h`.
     pub help: bool,
 }
 
 impl Cli {
+    /// Help text printed when the user requests command-line usage.
     pub const HELP_TEXT: &str = "Usage: lancev [OPTIONS]\n\nOptions:\n      --uri <URI>            Lance dataset URI\n  -t, --theme <light|dark>   Startup theme (default: dark)\n  -h, --help                 Print help\n";
 
+    /// Parses viewer command-line arguments.
+    ///
+    /// Returns an error when an argument is unknown, repeated, or missing a
+    /// required value.
     pub fn parse<I>(args: I) -> Result<Self, Box<dyn Error>>
     where
         I: IntoIterator<Item = String>,

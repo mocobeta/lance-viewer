@@ -4,11 +4,13 @@ use lance::index::DatasetIndexExt;
 
 use super::*;
 
+/// Internal helper for load dataset info.
 pub(crate) fn load_dataset_info(uri: &str) -> Result<DatasetInfo, Box<dyn Error>> {
     let runtime = tokio::runtime::Runtime::new()?;
     Ok(runtime.block_on(load_dataset_info_async(uri))?)
 }
 
+/// Internal helper for load version details.
 pub(crate) fn load_version_details(
     uri: &str,
     version: u64,
@@ -17,6 +19,7 @@ pub(crate) fn load_version_details(
     Ok(runtime.block_on(load_version_details_async(uri, version))?)
 }
 
+/// Internal helper for load index details.
 pub(crate) fn load_index_details(
     uri: &str,
     version: u64,

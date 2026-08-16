@@ -10,6 +10,7 @@ use prost_types::Any;
 
 use super::*;
 
+/// Internal helper for load data file layout.
 pub(crate) fn load_data_file_layout(
     uri: &str,
     version: u64,
@@ -25,6 +26,7 @@ pub(crate) fn load_data_file_layout(
     ))?)
 }
 
+/// Internal helper for load index file layout.
 pub(crate) fn load_index_file_layout(
     uri: &str,
     version: u64,

@@ -2,6 +2,7 @@ use crate::{dataset, tabs};
 
 use super::AppState;
 use super::state as app;
+/// Internal helper for load dataset info.
 pub(crate) fn load_dataset_info(uri: &str) -> app::DatasetState {
     match dataset::load_dataset_info(uri) {
         Ok(dataset_info) => app::DatasetState::Loaded(Box::new(dataset_info)),
@@ -12,6 +13,7 @@ pub(crate) fn load_dataset_info(uri: &str) -> app::DatasetState {
     }
 }
 
+/// Internal helper for load selected version.
 pub(crate) fn load_selected_version(state: &mut AppState, version: u64) {
     let Some(uri) = state.uri.clone() else {
         return;
@@ -50,6 +52,7 @@ pub(crate) fn load_selected_version(state: &mut AppState, version: u64) {
     }
 }
 
+/// Internal helper for load selected indices.
 pub(crate) fn load_selected_indices(state: &mut AppState, version: u64) {
     let Some(uri) = state.uri.clone() else {
         return;
@@ -70,6 +73,7 @@ pub(crate) fn load_selected_indices(state: &mut AppState, version: u64) {
     state.ensure_tables_index_selection();
 }
 
+/// Internal helper for open selected table index.
 pub(crate) fn open_selected_table_index(
     state: &mut AppState,
     load_indices: impl FnOnce(&mut AppState, u64),
@@ -82,6 +86,7 @@ pub(crate) fn open_selected_table_index(
     state.focus_selected_table_index();
 }
 
+/// Internal helper for load selected data file.
 pub(crate) fn load_selected_data_file(state: &mut AppState) {
     let Some(uri) = state.uri.clone() else {
         return;
@@ -136,6 +141,7 @@ pub(crate) fn load_selected_data_file(state: &mut AppState) {
     state.reset_layout_outline_selection();
 }
 
+/// Internal helper for load selected index file.
 pub(crate) fn load_selected_index_file(state: &mut AppState) {
     let Some(uri) = state.uri.clone() else {
         return;

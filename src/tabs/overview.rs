@@ -27,6 +27,7 @@ const SCHEMA_COLUMN_WIDTHS: [Constraint; 5] = [
     Constraint::Percentage(17),
 ];
 
+/// Internal helper for render.
 pub(crate) fn render(frame: &mut Frame, area: Rect, theme: &Theme, dataset_state: &DatasetState) {
     match dataset_state {
         DatasetState::Loaded(dataset_info) => render_loaded(frame, area, theme, dataset_info),

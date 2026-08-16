@@ -9,6 +9,7 @@ pub(crate) enum Action {
     Key(KeyCode),
 }
 
+/// Internal helper for poll action.
 pub(crate) fn poll_action() -> io::Result<Option<Action>> {
     if !event::poll(Duration::from_millis(250))? {
         return Ok(None);

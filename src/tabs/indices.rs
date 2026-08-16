@@ -21,6 +21,7 @@ const INDICES_TITLE: &str = "Indices";
 const DETAILS_TITLE: &str = "Index Details";
 const DETAIL_TITLES: [&str; 2] = ["Metadata", "Index Files"];
 
+/// Internal representation of RenderState.
 pub(crate) struct RenderState<'a> {
     pub(crate) selected_version: Option<u64>,
     pub(crate) focus: Option<IndicesFocus>,
@@ -54,6 +55,7 @@ struct IndexFileView<'a> {
     layout_state: LayoutState<'a>,
 }
 
+/// Internal helper for render.
 pub(crate) fn render(
     frame: &mut Frame,
     area: Rect,
@@ -659,6 +661,7 @@ fn index_metadata_lines(
     lines
 }
 
+/// Internal helper for fields for version.
 pub(crate) fn fields_for_version(dataset_info: &DatasetInfo, version: u64) -> &[FieldInfo] {
     dataset_info
         .schema_cache
@@ -674,6 +677,7 @@ pub(crate) fn fields_for_version(dataset_info: &DatasetInfo, version: u64) -> &[
         })
 }
 
+/// Internal helper for index field names.
 pub(crate) fn index_field_names(index: &IndexInfo, fields: &[FieldInfo]) -> String {
     if index.fields.is_empty() {
         return "—".to_string();

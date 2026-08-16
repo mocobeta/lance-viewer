@@ -25,6 +25,7 @@ const COLUMN_CONTENT: [&str; 2] = ["No fragments loaded.", "No data files loaded
 const INNER_TITLES: [&str; 2] = ["Layout Outline", "File Layout"];
 const VERSION_COLUMN_WIDTHS: [Constraint; 2] = [Constraint::Length(2), Constraint::Min(0)];
 
+/// Internal representation of RenderState.
 pub(crate) struct RenderState<'a> {
     pub(crate) dataset_state: DatasetState,
     pub(crate) selected_version: Option<u64>,
@@ -46,6 +47,7 @@ struct SelectionState<'a> {
     layout_outline_key: Option<(u64, u64, usize)>,
 }
 
+/// Internal helper for render.
 pub(crate) fn render(frame: &mut Frame, area: Rect, theme: &Theme, render_state: RenderState) {
     let [versions_area, fragments_area, data_files_area] = Layout::horizontal([
         Constraint::Percentage(10),
@@ -543,6 +545,7 @@ fn render_file_layouts(
     );
 }
 
+/// Internal helper for render layout outline.
 pub(crate) fn render_layout_outline(
     frame: &mut Frame,
     area: Rect,
@@ -671,6 +674,7 @@ struct FileLayoutTileRegion {
     range: ByteRange,
 }
 
+/// Internal helper for render file layout map.
 pub(crate) fn render_file_layout_map(
     frame: &mut Frame,
     area: Rect,
