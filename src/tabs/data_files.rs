@@ -77,6 +77,14 @@ pub(crate) fn render(frame: &mut Frame, area: Rect, theme: &Theme, render_state:
                 ratatui::text::Line::from(reason.clone()),
             ],
         ),
+        DatasetState::Loading => render_placeholder(
+            frame,
+            versions_area,
+            theme,
+            COLUMN_TITLES[0],
+            false,
+            vec![ratatui::text::Line::from("Loading dataset...")],
+        ),
         DatasetState::Empty => render_placeholder(
             frame,
             versions_area,
@@ -97,14 +105,16 @@ pub(crate) fn render(frame: &mut Frame, area: Rect, theme: &Theme, render_state:
             render_state.selected_fragment,
             render_state.focus,
         ),
-        DatasetState::Unavailable { .. } | DatasetState::Empty => render_placeholder(
-            frame,
-            fragments_area,
-            theme,
-            COLUMN_TITLES[1],
-            render_state.focus == Some(DataFilesFocus::Fragments),
-            vec![ratatui::text::Line::from(COLUMN_CONTENT[0])],
-        ),
+        DatasetState::Unavailable { .. } | DatasetState::Loading | DatasetState::Empty => {
+            render_placeholder(
+                frame,
+                fragments_area,
+                theme,
+                COLUMN_TITLES[1],
+                render_state.focus == Some(DataFilesFocus::Fragments),
+                vec![ratatui::text::Line::from(COLUMN_CONTENT[0])],
+            )
+        }
     }
 
     match &render_state.dataset_state {
@@ -123,14 +133,16 @@ pub(crate) fn render(frame: &mut Frame, area: Rect, theme: &Theme, render_state:
                 layout_outline_key: None,
             },
         ),
-        DatasetState::Unavailable { .. } | DatasetState::Empty => render_placeholder(
-            frame,
-            data_files_area,
-            theme,
-            COLUMN_TITLES[2],
-            render_state.focus == Some(DataFilesFocus::DataFiles),
-            vec![ratatui::text::Line::from(COLUMN_CONTENT[1])],
-        ),
+        DatasetState::Unavailable { .. } | DatasetState::Loading | DatasetState::Empty => {
+            render_placeholder(
+                frame,
+                data_files_area,
+                theme,
+                COLUMN_TITLES[2],
+                render_state.focus == Some(DataFilesFocus::DataFiles),
+                vec![ratatui::text::Line::from(COLUMN_CONTENT[1])],
+            )
+        }
     }
 }
 

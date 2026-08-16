@@ -1,4 +1,9 @@
-use std::{error::Error, time::Duration};
+use std::{
+    error::Error,
+    sync::mpsc::{self, TryRecvError},
+    thread,
+    time::Duration,
+};
 
 use crossterm::event::{self, Event, KeyCode, KeyEventKind};
 use ratatui::{
@@ -29,8 +34,13 @@ pub fn run(
     startup_theme: Option<StartupTheme>,
 ) -> Result<(), Box<dyn Error>> {
     let uri = uri.unwrap_or_else(|| ".".to_string());
-    let dataset_state = load_dataset_info(&uri);
-    let mut state = AppState::with_dataset_state(Some(uri), dataset_state);
+    let (dataset_sender, dataset_receiver) = mpsc::sync_channel(1);
+    let dataset_uri = uri.clone();
+    thread::spawn(move || {
+        let _ = dataset_sender.send(load_dataset_info(&dataset_uri));
+    });
+
+    let mut state = AppState::with_dataset_state(Some(uri), app::DatasetState::Loading);
     if let Some(startup_theme) = startup_theme {
         state.light_mode = startup_theme.light_mode();
     }
@@ -38,6 +48,20 @@ pub fn run(
     let mut theme = load_theme(state.light_mode);
 
     loop {
+        match dataset_receiver.try_recv() {
+            Ok(dataset_state) => {
+                state.dataset_state = dataset_state;
+                state.storage_expanded = match &state.dataset_state {
+                    app::DatasetState::Loaded(dataset_info) => {
+                        dataset_info.storage_layout.default_expanded()
+                    }
+                    _ => std::collections::BTreeSet::from([dataset::storage_root_key(".")]),
+                };
+                load_selected_data_file(&mut state);
+            }
+            Err(TryRecvError::Empty) | Err(TryRecvError::Disconnected) => {}
+        }
+
         terminal.draw(|frame| {
             frame.render_widget(
                 Block::default().style(

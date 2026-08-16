@@ -34,6 +34,7 @@ pub(crate) fn render(
             Line::from(""),
             Line::from(reason.clone()),
         ],
+        DatasetState::Loading => vec![Line::from("Loading dataset...")],
         DatasetState::Empty => vec![Line::from(CONTENT)],
     };
     frame.render_widget(

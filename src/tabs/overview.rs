@@ -46,6 +46,12 @@ pub(crate) fn render(frame: &mut Frame, area: Rect, theme: &Theme, dataset_state
             lines.extend(CONTENT.lines().map(Line::from));
             render_text(frame, area, theme, lines);
         }
+        DatasetState::Loading => {
+            let mut lines = vec![Line::styled("Loading dataset...", theme.style("keyword"))];
+            lines.push(Line::from(""));
+            lines.extend(CONTENT.lines().map(Line::from));
+            render_text(frame, area, theme, lines);
+        }
         DatasetState::Empty => render_text(
             frame,
             area,

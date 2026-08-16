@@ -135,6 +135,32 @@ pub(crate) fn render(
                 vec![Line::from("No index details loaded.")],
             );
         }
+        DatasetState::Loading => {
+            render_placeholder(
+                frame,
+                versions_area,
+                theme,
+                "Versions",
+                render_state.focus == Some(IndicesFocus::Versions),
+                vec![Line::from("Loading dataset...")],
+            );
+            render_placeholder(
+                frame,
+                indices_area,
+                theme,
+                "Indices",
+                render_state.focus == Some(IndicesFocus::Indices),
+                vec![Line::from("Loading dataset...")],
+            );
+            render_placeholder(
+                frame,
+                details_area,
+                theme,
+                "Index Details",
+                render_state.focus == Some(IndicesFocus::Details),
+                vec![Line::from("Loading dataset...")],
+            );
+        }
         DatasetState::Empty => {
             render_placeholder(
                 frame,

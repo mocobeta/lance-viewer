@@ -32,6 +32,7 @@ pub(crate) const TABLES_DETAIL_TAB_COUNT: usize = 4;
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) enum DatasetState {
     Empty,
+    Loading,
     Loaded(Box<DatasetInfo>),
     Unavailable { uri: String, reason: String },
 }

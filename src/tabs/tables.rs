@@ -60,6 +60,12 @@ pub(crate) fn render(
             ];
             render_text(frame, area, theme, lines);
         }
+        DatasetState::Loading => render_text(
+            frame,
+            area,
+            theme,
+            vec![ratatui::text::Line::from("Loading dataset...")],
+        ),
         DatasetState::Empty => {
             render_text(frame, area, theme, vec![ratatui::text::Line::from(CONTENT)])
         }
