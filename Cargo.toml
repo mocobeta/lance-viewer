@@ -4,6 +4,12 @@ version = "0.1.0"
 edition = "2024"
 repository = "https://github.com/mocobeta/lance-viewer"
 
+[package.metadata.wix]
+upgrade-guid = "512CDB26-456C-4147-829D-6D9A46A0E492"
+path-guid = "A11623A2-A5AF-4AE9-BDDB-249FE7D2FDF5"
+license = false
+eula = false
+
 [dependencies]
 crossterm = "0.29.0"
 lance = "10.0.0"
