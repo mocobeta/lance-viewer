@@ -15,3 +15,13 @@ targets = ["aarch64-apple-darwin", "aarch64-unknown-linux-gnu", "x86_64-apple-da
 install-path = "CARGO_HOME"
 # Whether to install an updater program
 install-updater = false
+
+# `lance-encoding` generates Protocol Buffer bindings during every target build.
+[dist.dependencies.homebrew]
+protobuf = "*"
+
+[dist.dependencies.apt]
+protobuf-compiler = "*"
+
+[dist.dependencies.chocolatey]
+protoc = "*"
