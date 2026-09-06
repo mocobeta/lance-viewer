@@ -2,6 +2,7 @@
 name = "lancev"
 version = "0.1.0"
 edition = "2024"
+repository = "https://github.com/mocobeta/lance-viewer"
 
 [dependencies]
 crossterm = "0.29.0"
@@ -14,3 +15,8 @@ prost = "0.14.4"
 prost-types = "0.14.4"
 ratatui = "0.30.2"
 tokio = { version = "1.23", features = ["rt-multi-thread"] }
+
+# The profile that 'dist' will build with
+[profile.dist]
+inherits = "release"
+lto = "thin"
